@@ -3,16 +3,13 @@ import azure.functions as func
 import pymongo
 import json
 import os
+from databaseHelper import DatabaseHelper
 from bson.json_util import dumps
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request for getting all notes!')
     try:
-        url = os.environ['MyDbConnectionString']
-        client = pymongo.MongoClient(url)
-        database = client["azureFunctionsTest"]
-        collection = database["notes"]
-        
+        collection = DatabaseHelper.getCollection()
         result = collection.find({})
         result = dumps(result)
         

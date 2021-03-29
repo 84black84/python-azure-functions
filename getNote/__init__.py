@@ -4,6 +4,7 @@ import pymongo
 import json
 import os
 from bson.json_util import dumps
+from databaseHelper import DatabaseHelper
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request for getting only one note.')
@@ -19,13 +20,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if noteId:
         try:
-            # url = "mongodb://127.0.0.1:27017"
-            url = "mongodb://cma-cosmos-db-account:DTkqLNQBThSrjftegdyPbXjSG6m3yBTfRhSkPGEidExO4zTtQNJ9vqfSpz7U8W5WKadZNbrJAzKsTslAT9gDGQ==@cma-cosmos-db-account.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cma-cosmos-db-account@"
-            # url = os.environ['MyDbConnectionString'] -- ideally 
-            client = pymongo.MongoClient(url)
-            database = client["azureFunctionsTest"]
-            collection = database["notes"]
-            
+            collection = DatabaseHelper.getCollection()
             result = collection.find({"_id" : noteId})
             result = dumps(result)
         
